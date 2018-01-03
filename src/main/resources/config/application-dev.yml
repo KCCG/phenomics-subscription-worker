@@ -1,0 +1,2 @@
+pipeline:
+    endpoint: http://pipeline-dev.phenomics.awsinternal.

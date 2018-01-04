@@ -1,6 +1,6 @@
 package au.org.garvan.kccg.subscription.worker;
 
-import com.google.common.base.Strings;
+//import com.google.common.base.Strings;
 import okhttp3.*;
 
 import java.io.InputStream;
@@ -8,6 +8,8 @@ import java.io.InputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.net.SocketException;
@@ -19,8 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class PipelineHandler {
-
-
+    private static final Logger slf4jLogger = LoggerFactory.getLogger(PipelineHandler.class);
 
     private static String pipelineEndpoint;
     private static String port = ":9080";
@@ -48,17 +49,17 @@ public class PipelineHandler {
                     .url(httpBuilder.build().url())
                     .build();
 
-            System.out.println(String.format("Dispatching get request for subscriptions. URL:%s", request.url()));
+            slf4jLogger.info(String.format("Dispatching get request for subscriptions. URL:%s", request.url()));
             Response response = subscriptionClient.newCall(request).execute();
-            System.out.println(String.format("Subscriptions request completed with code: %d", response.code()));
+            slf4jLogger.info(String.format("Subscriptions request completed with code: %d", response.code()));
 
 
             jsonResponseArray = (JSONArray) JSONValue.parse( response.body().string().trim()) ;
 
         } catch (SocketException e) {
-            System.out.println(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
+            slf4jLogger.error(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
         } catch (IOException ex) {
-            System.out.println(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
+            slf4jLogger.error(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
         }
 
         return jsonResponseArray;
@@ -86,15 +87,15 @@ public class PipelineHandler {
                     .url(httpBuilder.build().url())
                     .build();
 
-            System.out.println(String.format("Dispatching request for subscription update. URL:%s", request.url()));
+            slf4jLogger.info(String.format("Dispatching request for subscription update. URL:%s", request.url()));
             Response response = subscriptionClient.newCall(request).execute();
-            System.out.println(String.format("Subscription update request completed with code: %d", response.code()));
+            slf4jLogger.info(String.format("Subscription update request completed with code: %d", response.code()));
 
 
         } catch (SocketException e) {
-            System.out.println(String.format("Socket exception while updating subscription.\n Exception: %s", e.toString()));
+            slf4jLogger.error(String.format("Socket exception while updating subscription.\n Exception: %s", e.toString()));
         } catch (IOException ex) {
-            System.out.println(String.format("IO exception while updating subscription. \n Exception: %s", ex.toString()));
+            slf4jLogger.error(String.format("IO exception while updating subscription. \n Exception: %s", ex.toString()));
         }
 
     }
@@ -118,17 +119,17 @@ public class PipelineHandler {
                     .url(httpBuilder.build().url())
                     .build();
 
-            System.out.println(String.format("Dispatching query for search. URL:%s", request.url()));
+            slf4jLogger.info(String.format("Dispatching query for search. Query:%s", jsonQuery.toJSONString()));
             Response response = subscriptionClient.newCall(request).execute();
-            System.out.println(String.format("Query request completed with code: %d", response.code()));
+            slf4jLogger.info(String.format("Query request completed with code: %d", response.code()));
 
 
             jsonResponseArray = (JSONArray) JSONValue.parse( response.body().string().trim()) ;
 
         } catch (SocketException e) {
-            System.out.println(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
+            slf4jLogger.error(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
         } catch (IOException ex) {
-            System.out.println(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
+            slf4jLogger.error(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
         }
 
         return jsonResponseArray;
@@ -144,7 +145,7 @@ public class PipelineHandler {
 
         String configFile="";
         String ENV = System.getenv("ENV");
-        if (Strings.isNullOrEmpty(ENV))
+        if (ENV==null || ENV.isEmpty())
             ENV = "Local";
 
         switch(ENV) {

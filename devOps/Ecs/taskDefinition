@@ -1,0 +1,53 @@
+{
+    "containerDefinitions": [
+        {
+            "dnsSearchDomains": null,
+            "logConfiguration": null,
+            "entryPoint": null,
+            "command": null,
+            "linuxParameters": null,
+            "cpu": 256,
+            "environment": [
+            {
+              "Name" : "ENV",
+              "Value" : "DEV"
+            }],
+            "ulimits": null,
+            "dnsServers": null,
+            "mountPoints": [
+        {
+          "sourceVolume": "workerlogs",
+          "containerPath": "/logs"
+        }
+      ],
+            "workingDirectory": null,
+            "dockerSecurityOptions": null,
+            "memory": 256,
+            "memoryReservation": null,
+            "volumesFrom": [],
+            "image": "482667004524.dkr.ecr.ap-southeast-2.amazonaws.com/phenomics:subscription-worker-latest",
+            "disableNetworking": null,
+            "essential": true,
+            "links": null,
+            "hostname": null,
+            "extraHosts": null,
+            "user": null,
+            "readonlyRootFilesystem": null,
+            "dockerLabels": null,
+            "privileged": null,
+            "name": "subscription-worker-container"
+        }
+    ],
+    "taskRoleArn": null,
+    "family": "subscription-worker-task",
+    "networkMode": null,
+    "volumes": [
+    {
+      "name": "workerlogs",
+      "host": {
+        "sourcePath": "/var/log/"
+      }
+    }
+  ],
+    "placementConstraints": []
+}

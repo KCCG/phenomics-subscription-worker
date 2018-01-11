@@ -25,7 +25,7 @@ public class EmailHTML {
 
     private static String _4DIGESTCOUNT = "<p style=\"color: #2e6c80;\">Following are #Phenomics:DigestSize# articles along with relevant details.&nbsp;</p>\n";
 
-    private static String _5ITEM = "<h4><span style=\"color: #800000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle#</span><br /> [<a href=\"#Phenomics:ArticleURL#\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4>\n<hr style=\"border-top: dotted 1px;\" />";
+    private static String _5ITEM = "<h4><span style=\"color: #800000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle&nbsp;</span>[<a href=\"#Phenomics:ArticleURL#\" target=\"_blank\" rel=\"noopener\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4><hr style=\"border-top: dotted 1px;\" />";
 
     private static String _6FOOTER = "<p>&nbsp;</p>\n <p><br /><em>Your are receiving this email as you have a subscribed search with #Phenomics:SubscriptionTitle# title. Click here to unsubscribe this search.</em></p>\n</body>\n</html>\n";
 
@@ -41,27 +41,36 @@ public class EmailHTML {
 
     private String getCount(String totalArticles) {
         String tempCount = _3COUNT;
-        tempCount.replace("#Phenomics:TotalArticles#", totalArticles);
+        tempCount=tempCount.replace("#Phenomics:TotalArticles#", totalArticles);
         return tempCount;
     }
 
+
     private String getDigestCount(String digestCount) {
         String tempDisgestCount = _4DIGESTCOUNT;
-        tempDisgestCount.replace("#Phenomics:DigestSize#", digestCount);
+        tempDisgestCount=tempDisgestCount.replace("#Phenomics:DigestSize#", digestCount);
         return tempDisgestCount;
     }
 
     private String getItem(Integer articleNumner, String articleTitle, String pubMedID, String genes) {
         String tempItem = _5ITEM;
         String URL = "https://www.ncbi.nlm.nih.gov/pubmed/" + pubMedID;
-        tempItem.replace("#Phenomics:ArticleNumber#", String.valueOf(articleNumner));
-        tempItem.replace("#Phenomics:ArticleTitle#", articleTitle);
-        tempItem.replace("#Phenomics:ArticlePMID#", pubMedID);
-        tempItem.replace("#Phenomics:ArticleURL#", URL);
-        tempItem.replace("#Phenomics:GenesString#", genes);
+        tempItem= tempItem.replace("#Phenomics:ArticleNumber#", String.valueOf(articleNumner));
+        tempItem= tempItem.replace("#Phenomics:ArticleTitle#", articleTitle);
+        tempItem = tempItem.replace("#Phenomics:ArticlePMID#", pubMedID);
+        tempItem=tempItem.replace("#Phenomics:ArticleURL#", URL);
+        tempItem= tempItem.replace("#Phenomics:GenesString#", genes);
         return tempItem;
     }
 
+
+
+    private String getFooter(String searchTitle, String unsubscriptionLink){
+        String footer = _6FOOTER;
+
+        return footer;
+
+    }
     public StringBuilder constructEmail(EmailContentsMain emailContents) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getHeader());
@@ -89,6 +98,8 @@ public class EmailHTML {
             String item = getItem(emailArticle.getId(), emailArticle.getTitle(), emailArticle.getPMID(), genes);
             stringBuilder.append(item);
         }
+        //TODO: Add footer.
+        stringBuilder.append("");
         return stringBuilder;
 
     }

@@ -7,7 +7,7 @@ import java.util.Map;
 public class AppConfig
 {
 
-    private Map<String, String> pipeline;
+    public  Map<String, String> pipeline;
 
 
     @Override

@@ -155,16 +155,16 @@ public class PipelineHandler {
             JSONArray jsonArticles =  (JSONArray)jsonResponse.get("articles");
             if(jsonArticles.size()>0)
             {
-                List<ArticleDto> lstArtciles = new ArrayList<>();
+                List<ArticleDto> lastArticles = new ArrayList<>();
                 jsonArticles.stream().forEach(x -> {
                     try {
-                        lstArtciles.add(mapper.readValue(x.toString(), ArticleDto.class));
+                        lastArticles.add(mapper.readValue(x.toString(), ArticleDto.class));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
 
-                searchResponseDto.setArticles(lstArtciles);
+                searchResponseDto.setArticles(lastArticles);
             }
 
 

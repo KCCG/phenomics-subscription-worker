@@ -21,14 +21,15 @@ public class EmailHTML {
 
     private static String _2WELCOME = "<h2 style=\"color: #5e9ca0;\"><span style=\"color: #000000;\">Phenomics Pubmed Digest</span></h2>\n";
 
-    private static String _3COUNT = "<p style=\"color: #2e6c80;\"><span style=\"color: #000000;\">We have found</span> <span style=\"color: #800000;\">#Phenomics:TotalArticles# <span style=\"color: #000000;\">matching your search query.</span>&nbsp;</span></p>";
+    private static String _3COUNT = "<p style=\"color: #2e6c80;\"><span style=\"color: #000000;\">We have found</span> <span style=\"color: #800000;\">#Phenomics:TotalArticles# <span style=\"color: #000000;\"> articles matching your search query.</span>&nbsp;</span></p>";
 
-    private static String _4DIGESTCOUNT = "<p style=\"color: #2e6c80;\">Following are #Phenomics:DigestSize# articles along with relevant details.&nbsp;</p>\n";
+    private static String _4DIGESTCOUNT = "<p style=\"color: #2e6c80;\">Following are #Phenomics:DigestSize# results along with relevant details.&nbsp;</p>\n";
 
-    private static String _5ITEM = "<h4><span style=\"color: #800000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle&nbsp;</span>[<a href=\"#Phenomics:ArticleURL#\" target=\"_blank\" rel=\"noopener\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4><hr style=\"border-top: dotted 1px;\" />";
+    private static String _5ITEM = "<h4><span style=\"color: #800000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle#&nbsp;</span>[<a href=\"#Phenomics:ArticleURL#\" target=\"_blank\" rel=\"noopener\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4><hr style=\"border-top: dotted 1px;\" />";
 
-    private static String _6FOOTER = "<p>&nbsp;</p>\n <p><br /><em>Your are receiving this email as you have a subscribed search with #Phenomics:SubscriptionTitle# title. Click here to unsubscribe this search.</em></p>\n</body>\n</html>\n";
+    private static String _6FOOTER = "<p><br /><em>Your are receiving this email as you have a subscribed search with <strong><span style=\"color: #008000;\">#Phenomics:SubscriptionTitle#</span></strong> title. Click <a href=\"#Phenomics:UnsubscribeLink#\" target=\"_blank\" rel=\"noopener\">here</a> to un-subscribe this search.</em></p>";
 
+    // Modifier functions with custom inputs.
 
     private String getHeader() {
         return _1HEADER;
@@ -67,7 +68,8 @@ public class EmailHTML {
 
     private String getFooter(String searchTitle, String unsubscriptionLink){
         String footer = _6FOOTER;
-
+        footer= footer.replace("#Phenomics:SubscriptionTitle#", searchTitle);
+        footer= footer.replace("#Phenomics:UnsubscribeLink#", unsubscriptionLink);
         return footer;
 
     }
@@ -99,7 +101,7 @@ public class EmailHTML {
             stringBuilder.append(item);
         }
         //TODO: Add footer.
-        stringBuilder.append("");
+        stringBuilder.append(getFooter(emailContents.getSearchTitle(),emailContents.getUnsubscribeLink()));
         return stringBuilder;
 
     }

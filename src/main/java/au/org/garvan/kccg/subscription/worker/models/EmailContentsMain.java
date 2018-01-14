@@ -12,6 +12,8 @@ public class EmailContentsMain {
 
     Integer totalArticles;
     Integer digestArticles;
+    String  searchTitle;
+    String  unsubscribeLink;
     List<EmailArticle> lstItems;
 
 

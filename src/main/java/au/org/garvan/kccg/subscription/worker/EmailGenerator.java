@@ -24,11 +24,15 @@ public class EmailGenerator {
     }
 
     private static String prepareEmail(SubscriptionDto subscription, SearchResponseDto articlesObject) {
-        String emailHtml = "";
+        String emailHtml="";
         EmailContentsMain emailContents = new EmailContentsMain();
         emailContents.setTotalArticles(articlesObject.getPagination().getTotalArticles());
 
+        //Get subscription information to put in the email.
+        emailContents.setSearchTitle(subscription.getSearchName());
+        emailContents.setUnsubscribeLink(subscription.getSubscriptionId());
 
+        // Convert articles into items to be displayed in email.
         List<String> genesInQuery = subscription.getGenesInQuery();
         if (articlesObject.getArticles().size() > 0) {
             emailContents.setDigestArticles(articlesObject.getArticles().size());
@@ -63,11 +67,12 @@ public class EmailGenerator {
 
             emailContents.setLstItems(lstItems);
         } else {
+            //In case the search has not produced any result.
             emailContents.setDigestArticles(0);
             emailContents.setLstItems(new ArrayList<>());
 
         }
-
+        // Use emailHTML class to build the email html. This should be passed to notification service.
         StringBuilder stringBuilder = emailHTMLMaker.constructEmail(emailContents);
         emailHtml = stringBuilder.toString();
         return emailHtml;

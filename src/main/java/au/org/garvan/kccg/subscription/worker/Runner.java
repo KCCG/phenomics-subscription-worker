@@ -24,7 +24,7 @@ import java.util.List;
 public class Runner {
     private static final Logger slf4jLogger = LoggerFactory.getLogger(Runtime.class);
 
-    private static int subscriptionTime = 2;
+    private static int subscriptionTime = 3;
     @Getter
     private static AppConfig config;
 

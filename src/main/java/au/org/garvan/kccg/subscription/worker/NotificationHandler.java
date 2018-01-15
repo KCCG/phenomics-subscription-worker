@@ -63,11 +63,11 @@ public class NotificationHandler {
             slf4jLogger.info(String.format("Email dispatched with code: %d", response.code()));
 
         } catch (SocketException e) {
-            System.out.println(String.format("Socket exception when posting email request. \n Exception: %s", e.toString()));
+            slf4jLogger.info(String.format("Socket exception when posting email request. \n Exception: %s", e.toString()));
         } catch (IOException ex) {
-            System.out.println(String.format("IO exception when posting email request.\n Exception: %s", ex.toString()));
+            slf4jLogger.info(String.format("IO exception when posting email request.\n Exception: %s", ex.toString()));
         } catch (Exception eg) {
-            System.out.println(String.format("Generic when posting email request.\n Exception: %s", eg.toString()));
+            slf4jLogger.info(String.format("Generic when posting email request.\n Exception: %s", eg.toString()));
         }
 
 

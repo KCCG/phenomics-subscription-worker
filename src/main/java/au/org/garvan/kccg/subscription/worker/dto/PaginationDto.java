@@ -22,12 +22,5 @@ public class PaginationDto {
         @JsonProperty
         Integer totalPages;
 
-//        "pagination": {
-//            "pageNo": 0,
-//                    "pageSize": 0,
-//                    "totalArticles": 0,
-//                    "totalPages": 0
-//        }
-
 }
 

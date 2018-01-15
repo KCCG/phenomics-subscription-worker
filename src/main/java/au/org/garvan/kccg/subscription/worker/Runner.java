@@ -3,7 +3,6 @@ package au.org.garvan.kccg.subscription.worker;
 import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
 import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
 import lombok.Getter;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +89,7 @@ public class Runner {
 
     private static void prepareEmail(SubscriptionDto subscription, SearchResponseDto paginatedArticles) {
         slf4jLogger.info(String.format("Preparing email for Subscription. Id: %s. ",subscription.getSubscriptionId()));
-
+        EmailGenerator.prepareAndSendEmail(subscription, paginatedArticles);
         slf4jLogger.info(String.format("Email processed for Subscription. Id: %s. ",subscription.getSubscriptionId()));
 
     }

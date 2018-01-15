@@ -2,6 +2,7 @@ package au.org.garvan.kccg.subscription.worker;
 
 import au.org.garvan.kccg.subscription.worker.constants.EmailHTML;
 import au.org.garvan.kccg.subscription.worker.dto.ArticleDto;
+import au.org.garvan.kccg.subscription.worker.dto.EmailNotificationRequestDto;
 import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
 import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
 import au.org.garvan.kccg.subscription.worker.models.EmailArticle;
@@ -9,6 +10,7 @@ import au.org.garvan.kccg.subscription.worker.models.EmailContentsMain;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -18,7 +20,7 @@ public class EmailGenerator {
 
     private static EmailHTML emailHTMLMaker = new EmailHTML();
 
-    public static void prepapreAndSendEmail(SubscriptionDto subscription, SearchResponseDto articles) {
+    public static void prepareAndSendEmail(SubscriptionDto subscription, SearchResponseDto articles) {
         String email = prepareEmail(subscription, articles);
         sendEmail(subscription, email);
     }
@@ -36,7 +38,7 @@ public class EmailGenerator {
         List<String> genesInQuery = subscription.getGenesInQuery();
         if (articlesObject.getArticles().size() > 0) {
             emailContents.setDigestArticles(articlesObject.getArticles().size());
-            articlesObject.getArticles().sort(Comparator.comparing(ArticleDto::getArticleRank));
+            articlesObject.getArticles().sort(Comparator.comparing(ArticleDto::getArticleRank).reversed());
             List<EmailArticle> lstItems = new ArrayList<>();
             Integer id = 1;
             for (ArticleDto articleDto : articlesObject.getArticles()) {
@@ -79,8 +81,13 @@ public class EmailGenerator {
     }
 
     private static boolean sendEmail(SubscriptionDto subscription, String email) {
-
-
+        EmailNotificationRequestDto emailObject = new EmailNotificationRequestDto();
+        emailObject.setMessage(email);
+        emailObject.setSender("Phenomics-Subscription-Service");
+        emailObject.setSubject(subscription.getSearchName());
+        emailObject.setToRecipients(Arrays.asList(subscription.getEmailId()));
+        emailObject.setUniqueID(subscription.getSubscriptionId()+ ":" + LocalDateTime.now().toString());
+        NotificationHandler.sendEmail(emailObject);
         return true;
 
     }

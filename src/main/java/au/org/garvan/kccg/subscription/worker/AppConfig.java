@@ -7,11 +7,11 @@ import java.util.Map;
 public class AppConfig
 {
 
-    public  Map<String, String> pipeline;
+    public  Map<String, String> connections;
 
 
     @Override
     public String toString() {
-        return "LogConfiguration [pipeline=" + pipeline + "]";
+        return "LogConfiguration [connections=" + connections + "]";
     }
 }

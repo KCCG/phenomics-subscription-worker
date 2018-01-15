@@ -39,7 +39,7 @@ public class PipelineHandler {
         init();
     }
     private static void init(){
-        pipelineEndpoint = Runner.getConfig().pipeline.get("endpoint");
+        pipelineEndpoint = Runner.getConfig().connections.get("pipeline-endpoint");
     }
 
     public static List<SubscriptionDto> getSubscriptions(){
@@ -138,6 +138,7 @@ public class PipelineHandler {
         try {
 
             HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + port + query).newBuilder();
+            httpBuilder.addQueryParameter("pageSize", "25");
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonQuery.toString());
             Request request = new Request.Builder()
                     .post(body)
@@ -172,7 +173,11 @@ public class PipelineHandler {
             slf4jLogger.error(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
         } catch (IOException ex) {
             slf4jLogger.error(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
+        } catch (Exception eg) {
+            slf4jLogger.error(String.format("Generic exception while fetching subscriptions. \n Exception: %s", eg.toString()));
         }
+
+
 
         return searchResponseDto;
     }

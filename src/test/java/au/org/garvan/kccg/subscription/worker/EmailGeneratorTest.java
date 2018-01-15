@@ -6,17 +6,15 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by ahmed on 11/1/18.
  */
 public class EmailGeneratorTest {
     @Test
-    public void prepapreAndSendEmail() throws Exception {
+    public void prepareAndSendEmail() throws Exception {
         List<SubscriptionDto> subs = PipelineHandler.getSubscriptions();
         SearchResponseDto articles = PipelineHandler.getArticles(subs.get(0).getQuery());
-        EmailGenerator.prepapreAndSendEmail(subs.get(0), articles);
+        EmailGenerator.prepareAndSendEmail(subs.get(0), articles);
 
     }
 

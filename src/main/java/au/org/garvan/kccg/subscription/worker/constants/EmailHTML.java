@@ -115,7 +115,7 @@ public class EmailHTML {
         for (Entry<String, Integer> entry : sortedQueriedGenes.entrySet()) {
             geneStrings.add(String.format("%s(%d)", entry.getKey(), entry.getValue()));
         }
-        return geneStrings.stream().collect(Collectors.joining(","));
+        return geneStrings.stream().collect(Collectors.joining(", "));
     }
 
 }

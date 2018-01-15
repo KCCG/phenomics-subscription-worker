@@ -79,28 +79,29 @@ public class EmailHTML {
         stringBuilder.append(getWelcome());
         stringBuilder.append(getCount(String.valueOf(emailContents.getTotalArticles())));
 
-        String digestString;
-        if (emailContents.getTotalArticles() == emailContents.getDigestArticles()) {
-            digestString = "searched";
-        } else {
-            digestString = "top " + String.valueOf(emailContents.getDigestArticles());
-        }
-        stringBuilder.append(getDigestCount(digestString));
+        if(emailContents.getDigestArticles()>0) {
+            String digestString;
+            if (emailContents.getTotalArticles() == emailContents.getDigestArticles()) {
+                digestString = "searched";
+            } else {
+                digestString = "top " + String.valueOf(emailContents.getDigestArticles());
+            }
+            stringBuilder.append(getDigestCount(digestString));
 
-        for (EmailArticle emailArticle : emailContents.getLstItems()) {
-            String genes = "";
-            if (emailArticle.getQueriedGenes().size() > 0) {
-                genes = genes + constructGeneString(emailArticle.getQueriedGenes());
+            for (EmailArticle emailArticle : emailContents.getLstItems()) {
+                String genes = "";
+                if (emailArticle.getQueriedGenes().size() > 0) {
+                    genes = genes + constructGeneString(emailArticle.getQueriedGenes());
+                }
+                if (emailArticle.getOtherGenes().size() > 0) {
+                    if (genes != "")
+                        genes = genes + " | ";
+                    genes = genes + constructGeneString(emailArticle.getOtherGenes());
+                }
+                String item = getItem(emailArticle.getId(), emailArticle.getTitle(), emailArticle.getPMID(), genes);
+                stringBuilder.append(item);
             }
-            if (emailArticle.getOtherGenes().size() > 0) {
-                if (genes != "")
-                    genes = genes + " | ";
-                genes = genes + constructGeneString(emailArticle.getOtherGenes());
-            }
-            String item = getItem(emailArticle.getId(), emailArticle.getTitle(), emailArticle.getPMID(), genes);
-            stringBuilder.append(item);
         }
-        //TODO: Add footer.
         stringBuilder.append(getFooter(emailContents.getSearchTitle(),emailContents.getUnsubscribeLink()));
         return stringBuilder;
 

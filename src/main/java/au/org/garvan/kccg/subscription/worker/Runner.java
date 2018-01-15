@@ -39,9 +39,8 @@ public class Runner {
         //Filter subscription based on scheduling criteria
         if(subscriptions.size()>0)
         {
-
             List<SubscriptionDto> toBeProcessedSubscription = filterSubscriptions(subscriptions);
-            //Process subscription in loop
+            //Process subscriptions one by one
             processSubscriptions(toBeProcessedSubscription);
         }
         else
@@ -77,7 +76,7 @@ public class Runner {
             String subscriptionId = currentSubscription.getSubscriptionId();
             slf4jLogger.info(String.format("Processing Subscription. Id: %s, Progress:%d/%d", subscriptionId,index,total));
             if (currentSubscription.getQuery()!=null) {
-                SearchResponseDto paginatedArticles = PipelineHandler.getArticles(prepareQuery(subscriptionId, currentSubscription.getQuery()));
+                SearchResponseDto paginatedArticles = PipelineHandler.getArticles(prepareQuery(subscriptionId, currentSubscription));
                 slf4jLogger.info(String.format("Articles fetched for Subscription. Id: %s, Articles:%d", subscriptionId,paginatedArticles.getArticles().size()));
                 prepareEmail(currentSubscription, paginatedArticles);
                 updateSubscription(currentSubscription);
@@ -108,19 +107,19 @@ public class Runner {
 
     }
 
-    private static JSONObject prepareQuery(String subscriptionId, JSONObject subscription) {
+    private static JSONObject prepareQuery(String subscriptionId, SubscriptionDto subscriptionDto) {
 
-        long runDate = (long) (Double.parseDouble(subscription.get("lastRunDate").toString()));
+
+        long runDate = (long) (Double.parseDouble(subscriptionDto.getLastRunDate().toString()));
         long today = LocalDate.now().toEpochDay();
         JSONObject dateRange = new JSONObject();
         dateRange.put("startDate", runDate);
         dateRange.put("endDate", today);
 
 
-        JSONObject query = (JSONObject) subscription.get("query");
+        JSONObject query = subscriptionDto.getQuery();
         query.put("dateRange", dateRange);
         slf4jLogger.info(String.format("Injecting date range %s in query for Subscription. Id: %s. ",dateRange.toJSONString(), subscriptionId));
-
         return query;
     }
 

@@ -7,8 +7,6 @@ import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
 import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
 import au.org.garvan.kccg.subscription.worker.models.EmailArticle;
 import au.org.garvan.kccg.subscription.worker.models.EmailContentsMain;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,11 +19,14 @@ public class EmailGenerator {
     private static EmailHTML emailHTMLMaker = new EmailHTML();
 
     public static void prepareAndSendEmail(SubscriptionDto subscription, SearchResponseDto articles) {
-        String email = prepareEmail(subscription, articles);
-        sendEmail(subscription, email);
+
+        String emailContent;
+        emailContent = prepareEmailWithArticles(subscription, articles);
+
+        sendEmail(subscription, emailContent);
     }
 
-    private static String prepareEmail(SubscriptionDto subscription, SearchResponseDto articlesObject) {
+    private static String prepareEmailWithArticles(SubscriptionDto subscription, SearchResponseDto articlesObject) {
         String emailHtml="";
         EmailContentsMain emailContents = new EmailContentsMain();
         emailContents.setTotalArticles(articlesObject.getPagination().getTotalArticles());

@@ -2,6 +2,7 @@ package au.org.garvan.kccg.subscription.worker.dto;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,6 +10,6 @@ import java.util.List;
  */
 @Data
 public class SearchResponseDto {
-    PaginationDto pagination;
-    List<ArticleDto> articles;
+    PaginationDto pagination = new PaginationDto();
+    List<ArticleDto> articles = new ArrayList<>();
 }

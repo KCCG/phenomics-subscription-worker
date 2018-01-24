@@ -1,2 +1,3 @@
-pipeline:
-    endpoint: http://localhost
+connections:
+    pipeline-endpoint: http://localhost
+    notification-endpoint: http://localhost

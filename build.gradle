@@ -37,7 +37,12 @@ dependencies {
             'org.projectlombok:lombok:1.16.14',
             'com.squareup.okhttp3:okhttp:3.6.0',
             'org.yaml:snakeyaml:1.17',
-            'org.slf4j:slf4j-log4j12:1.7.25'
+            'org.slf4j:slf4j-log4j12:1.7.25',
+            'com.itextpdf:itextpdf:5.5.12',
+            'com.fasterxml.jackson.core:jackson-annotations:2.9.0',
+            'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+
+
     )
 
     testCompile 'junit:junit:4.12'

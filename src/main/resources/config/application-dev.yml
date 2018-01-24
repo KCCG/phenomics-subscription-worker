@@ -1,2 +1,3 @@
-pipeline:
-    endpoint: http://pipeline-dev.phenomics.awsinternal.
+connections:
+     pipeline-endpoint: http://pipeline-dev.phenomics.awsinternal.
+     notification-endpoint: http://pipeline-dev.phenomics.awsinternal.

@@ -1,6 +1,11 @@
 package au.org.garvan.kccg.subscription.worker;
 
 //import com.google.common.base.Strings;
+import au.org.garvan.kccg.subscription.worker.dto.ArticleDto;
+import au.org.garvan.kccg.subscription.worker.dto.PaginationDto;
+import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
+import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 
 import java.io.InputStream;
@@ -13,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -31,9 +38,13 @@ public class PipelineHandler {
     static {
         init();
     }
+    private static void init(){
+        pipelineEndpoint = Runner.getConfig().connections.get("pipeline-endpoint");
+    }
 
-    public static JSONArray getSubscriptions(){
-        JSONArray jsonResponseArray = new JSONArray();
+    public static List<SubscriptionDto> getSubscriptions(){
+        List<SubscriptionDto> lstSubscriptions = new ArrayList<>();
+
         OkHttpClient subscriptionClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .connectTimeout(300L, TimeUnit.SECONDS)
@@ -54,7 +65,20 @@ public class PipelineHandler {
             slf4jLogger.info(String.format("Subscriptions request completed with code: %d", response.code()));
 
 
-            jsonResponseArray = (JSONArray) JSONValue.parse( response.body().string().trim()) ;
+            JSONArray jsonSubscriptions = (JSONArray) JSONValue.parse( response.body().string().trim()) ;
+            if(jsonSubscriptions.size()>0)
+            {
+                ObjectMapper mapper = new ObjectMapper();
+                jsonSubscriptions.stream().forEach(x -> {
+                    try {
+                        lstSubscriptions.add(mapper.readValue(x.toString(), SubscriptionDto.class));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+
+            }
 
         } catch (SocketException e) {
             slf4jLogger.error(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
@@ -62,7 +86,7 @@ public class PipelineHandler {
             slf4jLogger.error(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
         }
 
-        return jsonResponseArray;
+        return lstSubscriptions;
     }
 
     public static void updateSubscription(String sId, long runDate, String timeStamp){
@@ -101,8 +125,9 @@ public class PipelineHandler {
     }
 
 
-    public static JSONArray getArticles(JSONObject jsonQuery){
-        JSONArray jsonResponseArray = new JSONArray();
+    public static SearchResponseDto getArticles(JSONObject jsonQuery){
+        SearchResponseDto searchResponseDto = new SearchResponseDto();
+
         OkHttpClient subscriptionClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .connectTimeout(300L, TimeUnit.SECONDS)
@@ -113,6 +138,7 @@ public class PipelineHandler {
         try {
 
             HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + port + query).newBuilder();
+            httpBuilder.addQueryParameter("pageSize", "25");
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonQuery.toString());
             Request request = new Request.Builder()
                     .post(body)
@@ -123,50 +149,43 @@ public class PipelineHandler {
             Response response = subscriptionClient.newCall(request).execute();
             slf4jLogger.info(String.format("Query request completed with code: %d", response.code()));
 
+            JSONObject jsonResponse = (JSONObject) JSONValue.parse( response.body().string().trim());
+            ObjectMapper mapper = new ObjectMapper();
+            PaginationDto page = mapper.readValue(jsonResponse.get("pagination").toString(),PaginationDto.class);
+            searchResponseDto.setPagination(page);
+            JSONArray jsonArticles =  (JSONArray)jsonResponse.get("articles");
+            if(jsonArticles.size()>0)
+            {
+                List<ArticleDto> lastArticles = new ArrayList<>();
+                jsonArticles.stream().forEach(x -> {
+                    try {
+                        lastArticles.add(mapper.readValue(x.toString(), ArticleDto.class));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
-            jsonResponseArray = (JSONArray) JSONValue.parse( response.body().string().trim()) ;
+                searchResponseDto.setArticles(lastArticles);
+            }
+
 
         } catch (SocketException e) {
             slf4jLogger.error(String.format("Socket exception while fetching subscriptions.\n Exception: %s", e.toString()));
         } catch (IOException ex) {
             slf4jLogger.error(String.format("IO exception while fetching subscriptions. \n Exception: %s", ex.toString()));
+        } catch (Exception eg) {
+            slf4jLogger.error(String.format("Generic exception while fetching subscriptions. \n Exception: %s", eg.toString()));
         }
 
-        return jsonResponseArray;
+
+
+        return searchResponseDto;
     }
 
 
 
 
 
-    private static void init(){
-        AppConfig config = null;
-        Yaml yaml = new Yaml();
-
-        String configFile="";
-        String ENV = System.getenv("ENV");
-        if (ENV==null || ENV.isEmpty())
-            ENV = "Local";
-
-        switch(ENV) {
-            case "Local":
-                configFile =  "application.yml";
-                break;
-            case "DEV":
-                configFile =  "application-dev.yml";
-                break;
-            case "PROD":
-                configFile =  "application-prod.yml";
-                break;
-        }
-        try(InputStream in = ClassLoader.getSystemResourceAsStream("config/" + configFile)) {
-            config = yaml.loadAs(in, AppConfig.class);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-        pipelineEndpoint = config.getPipeline().get("endpoint");
-
-    }
 
 
 }

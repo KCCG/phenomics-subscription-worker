@@ -21,11 +21,11 @@ public class EmailHTML {
 
     private static String _2WELCOME = "<h2 style=\"color: #5e9ca0;\"><span style=\"color: #000000;\">Phenomics Pubmed Digest</span></h2>\n";
 
-    private static String _3COUNT = "<p style=\"color: #2e6c80;\"><span style=\"color: #000000;\">We have found</span> <span style=\"color: #800000;\">#Phenomics:TotalArticles# <span style=\"color: #000000;\"> articles matching your search query.</span>&nbsp;</span></p>";
+    private static String _3COUNT = "<p style=\"color: #2e6c80;\"><span style=\"color: #000000;\">We have found</span> <span style=\"color: #800000;\">#Phenomics:TotalArticles# <span style=\"color: #000000;\"> article(s) matching your search query.</span>&nbsp;</span></p>";
 
     private static String _4DIGESTCOUNT = "<p style=\"color: #2e6c80;\">Following are #Phenomics:DigestSize# results along with relevant details.&nbsp;</p>\n";
 
-    private static String _5ITEM = "<h4><span style=\"color: #800000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle#&nbsp;</span>[<a href=\"#Phenomics:ArticleURL#\" target=\"_blank\" rel=\"noopener\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4><hr style=\"border-top: dotted 1px;\" />";
+    private static String _5ITEM = "<h4><span style=\"color: #800000;\"><span style=\"color: #000000;\">#Phenomics:ArticleNumber#. #Phenomics:ArticleTitle#</span>&nbsp;</span>[<a href=\"#Phenomics:ArticleURL#\" target=\"_blank\" rel=\"noopener\"><span style=\"color: #808080;\">#Phenomics:ArticlePMID#</span></a>]<br />Genes: #Phenomics:GenesString#</h4>\n<hr style=\"border-top: dotted 1px;\" />";
 
     private static String _6FOOTER = "<p><br /><em>Your are receiving this email as you have a subscribed search with <strong><span style=\"color: #008000;\">#Phenomics:SubscriptionTitle#</span></strong> title. Click <a href=\"#Phenomics:UnsubscribeLink#\" target=\"_blank\" rel=\"noopener\">here</a> to un-subscribe this search.</em></p>";
 

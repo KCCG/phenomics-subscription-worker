@@ -19,22 +19,22 @@ import static org.junit.Assert.*;
  * Created by ahmed on 11/1/18.
  */
 public class PipelineHandlerTest {
-
-    @Before
-    public void init(){
-        Runner.init();
-    }
+//
+//    @Before
+//    public void init(){
+//        Runner.init();
+//    }
 //    @Test
 //    public void getSubscriptions() throws Exception {
 //        List<SubscriptionDto> respone = PipelineHandler.getSubscriptions();
-//        List<String> genes = respone.get(0).getGenesInQuery();
+//        List<String> genes = respone.get(0).getSearchItems();
 //    }
-
+//
 //    @Test
 //    public void getArticles() throws Exception {
 //        List<SubscriptionDto> subs = PipelineHandler.getSubscriptions();
 //        SearchResponseDto articles = PipelineHandler.getArticles(subs.get(0).getQuery());
-//        Map x = articles.getArticles().get(0).getGenesWithCount();
+//        Map x = articles.getArticles().get(0).getArticleConcepts();
 //
 //    }
 

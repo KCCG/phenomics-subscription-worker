@@ -1,15 +1,14 @@
 package au.org.garvan.kccg.subscription.worker;
 
 import au.org.garvan.kccg.subscription.worker.constants.EmailHTML;
-import au.org.garvan.kccg.subscription.worker.dto.ArticleDto;
-import au.org.garvan.kccg.subscription.worker.dto.EmailNotificationRequestDto;
-import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
-import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
+import au.org.garvan.kccg.subscription.worker.dto.*;
+import au.org.garvan.kccg.subscription.worker.enums.AnnotationType;
 import au.org.garvan.kccg.subscription.worker.models.EmailArticle;
 import au.org.garvan.kccg.subscription.worker.models.EmailContentsMain;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by ahmed on 10/1/18.
@@ -36,7 +35,12 @@ public class EmailGenerator {
         emailContents.setUnsubscribeLink(subscription.getSubscriptionId());
 
         // Convert articles into items to be displayed in email.
-        List<String> genesInQuery = subscription.getGenesInQuery();
+
+        //Get concepts from query
+        List<ConceptDto> conceptsInQuery = subscription.getSearchItems();
+        //Need to prepare gene display string with search symbols at first.
+        List<String> genesInQuery = conceptsInQuery.stream().filter(x->x.getType().equals(AnnotationType.GENE.toString())).map(g->g.getId()).collect(Collectors.toList());
+
         if (articlesObject.getArticles().size() > 0) {
             emailContents.setDigestArticles(articlesObject.getArticles().size());
             articlesObject.getArticles().sort(Comparator.comparing(ArticleDto::getArticleRank).reversed());
@@ -50,17 +54,20 @@ public class EmailGenerator {
 
                 Map<String, Integer> queriedGenes = new HashMap<>();
                 Map<String, Integer> otherGenes = new HashMap<>();
-                Map<String, Integer> articleGenes = articleDto.getGenesWithCount();
+
+                //Get genes from article
+               List<ConceptDto>articleGenes = articleDto.getArticleConcepts().stream().filter(x->x.getType().equals(AnnotationType.GENE.toString())).collect(Collectors.toList());
 
                 if(articleGenes.size()>0) {
-                    for (Map.Entry<String, Integer> entry : articleGenes.entrySet()) {
-                        if (genesInQuery.contains(entry.getKey())) {
-                            queriedGenes.put(entry.getKey(), entry.getValue());
+                    for (ConceptDto aGene : articleGenes) {
+                        if (genesInQuery.contains(aGene.getId())) {
+                            queriedGenes.put(aGene.getText(), aGene.getCount());
                         } else {
-                            otherGenes.put(entry.getKey(), entry.getValue());
+                            otherGenes.put(aGene.getText(), aGene.getCount());
                         }
                     }
                 }
+                //To types of annotations in article. Matched with query and additional
                 emailArticle.setQueriedGenes(queriedGenes);
                 emailArticle.setOtherGenes(otherGenes);
 

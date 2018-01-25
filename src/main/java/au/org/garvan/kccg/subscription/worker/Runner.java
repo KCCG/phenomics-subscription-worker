@@ -2,7 +2,9 @@ package au.org.garvan.kccg.subscription.worker;
 
 import au.org.garvan.kccg.subscription.worker.dto.SearchResponseDto;
 import au.org.garvan.kccg.subscription.worker.dto.SubscriptionDto;
+import au.org.garvan.kccg.subscription.worker.enums.AnnotationType;
 import lombok.Getter;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,14 +114,28 @@ public class Runner {
 
         long runDate = (long) (Double.parseDouble(subscriptionDto.getLastRunDate().toString()));
         long today = LocalDate.now().toEpochDay();
-        JSONObject dateRange = new JSONObject();
-        dateRange.put("startDate", runDate);
-        dateRange.put("endDate", today);
-
+        JSONObject jsonDateRange = new JSONObject();
+        String filterItemsKey = "filterItems";
+        jsonDateRange.put("id", String.format("%d:%d", runDate, today));
+        jsonDateRange.put("type", AnnotationType.DATERANGE.toString());
 
         JSONObject query = subscriptionDto.getQuery();
-        query.put("dateRange", dateRange);
-        slf4jLogger.info(String.format("Injecting date range %s in query for Subscription. Id: %s. ",dateRange.toJSONString(), subscriptionId));
+
+        JSONArray jsonFilterItems= new JSONArray();
+        if(query.containsKey(filterItemsKey)){
+           if(query.get(filterItemsKey)!=null){
+                jsonFilterItems = (JSONArray) query.get(filterItemsKey);
+                query.remove(filterItemsKey);
+            }
+            else{
+               query.remove(filterItemsKey);
+           }
+        }
+
+        jsonFilterItems.add(jsonDateRange);
+        query.put(filterItemsKey,jsonFilterItems);
+
+        slf4jLogger.info(String.format("Injecting date range %s in query for Subscription. Id: %s. ",jsonDateRange.toJSONString(), subscriptionId));
         return query;
     }
 

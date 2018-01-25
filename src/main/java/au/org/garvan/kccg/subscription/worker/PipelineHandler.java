@@ -33,7 +33,7 @@ public class PipelineHandler {
     private static String pipelineEndpoint;
     private static String port = ":9080";
     private static String subscriptionsAll = "/subscription/";
-    private static String query = "/query/";
+    private static String query = "/query/v1.0";
 
     static {
         init();

@@ -8,11 +8,14 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by ahmed on 11/1/18.
+ * Modified with generic concepts 26/1/18.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -33,16 +36,26 @@ public class SubscriptionDto {
     @JsonProperty
     Integer lastRunDate;
 
-    public SubscriptionDto(){}
+    public SubscriptionDto() {
+    }
 
 
-    public List<String> getGenesInQuery(){
-        List<String> geneSymbols = new ArrayList<>();
+    //Query has been updated with generic search items.
+    public List<ConceptDto> getSearchItems() {
+        List<ConceptDto> searchItems = new ArrayList<>();
 
-        if(query.get("gene")!=null){
-            geneSymbols = ((ArrayList)((LinkedHashMap) query.get("gene")).get("symbols")) ;
+        if (query.containsKey("searchItems") && query.get("searchItems") != null) {
+            ArrayList<Object> conceptsArray = (ArrayList<Object>) query.get("searchItems");
+
+            for (Object obj : conceptsArray) {
+                HashMap filter = (HashMap) obj;
+                ConceptDto tempConcept = new ConceptDto();
+                tempConcept.setType(filter.get("type").toString());
+                tempConcept.setId(filter.get("id").toString());
+                searchItems.add(tempConcept);
+            }
         }
-        return geneSymbols;
+        return searchItems;
     }
 
 

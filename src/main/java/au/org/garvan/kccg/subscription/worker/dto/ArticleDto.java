@@ -21,6 +21,9 @@ public class ArticleDto {
     String articleTitle;
 
     @JsonProperty
+    String articleAbstract;
+
+    @JsonProperty
     Integer articleRank;
 
     @JsonProperty
@@ -36,15 +39,15 @@ public class ArticleDto {
         List<ConceptDto> articleConcepts = new ArrayList<>();
         if (annotations != null) {
 
-            ArrayList<Object> geneList = (ArrayList) annotations;
-            for (Object obj : geneList) {
+            ArrayList<Object> annotations = (ArrayList) this.annotations;
+            for (Object obj : annotations) {
                 HashMap concept = (HashMap) obj;
                 articleConcepts.add(
                         new ConceptDto(
                                 concept.get("id").toString(),
                                 concept.get("type").toString(),
                                 concept.get("text").toString(),
-                                ((ArrayList) concept.get("offsets")).size())
+                                ((ArrayList) concept.get("offsets")))
                 );
             }
         }

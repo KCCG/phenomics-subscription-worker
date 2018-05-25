@@ -116,6 +116,7 @@ public class Runner {
         long today = LocalDate.now().toEpochDay();
         JSONObject jsonDateRange = new JSONObject();
         String filterItemsKey = "filterItems";
+        String searchItemKey = "searchItems";
         jsonDateRange.put("id", String.format("%d:%d", runDate, today));
         jsonDateRange.put("type", AnnotationType.DATERANGE.toString());
 
@@ -134,6 +135,26 @@ public class Runner {
 
         jsonFilterItems.add(jsonDateRange);
         query.put(filterItemsKey,jsonFilterItems);
+
+        ArrayList jsonSearchItems;
+        JSONArray jsonSearchItemsTobeSend = new JSONArray();
+        if(query.containsKey(searchItemKey)){
+            jsonSearchItems = (ArrayList) query.get(searchItemKey);
+            for(Object object: jsonSearchItems){
+                JSONObject tempJsonSearchItem = new JSONObject();
+                tempJsonSearchItem.put("id", object.toString());
+                tempJsonSearchItem.put("type", AnnotationType.ENTITY.toString());
+                jsonSearchItemsTobeSend.add(tempJsonSearchItem);
+
+            }
+            query.remove(searchItemKey);
+            query.put(searchItemKey, jsonSearchItemsTobeSend);
+
+
+        }
+
+
+
 
         slf4jLogger.info(String.format("Injecting date range %s in query for Subscription. Id: %s. ",jsonDateRange.toJSONString(), subscriptionId));
         return query;

@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class ConceptDto {
     @JsonProperty
     String text;
     @JsonProperty
-    Integer count;
+    ArrayList offsets;
+
 
 }

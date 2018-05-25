@@ -10,6 +10,7 @@ public enum AnnotationType{
     DRUG,
     THERAPY,
     EXPOSURE,
-    DATERANGE
+    DATERANGE,
+    ENTITY
 
 }

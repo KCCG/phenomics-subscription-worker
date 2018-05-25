@@ -31,7 +31,7 @@ public class PipelineHandler {
     private static final Logger slf4jLogger = LoggerFactory.getLogger(PipelineHandler.class);
 
     private static String pipelineEndpoint;
-    private static String port = ":9080";
+//    private static String port = ":9080";
     private static String subscriptionsAll = "/subscription/";
     private static String query = "/query/v1.0";
 
@@ -54,7 +54,7 @@ public class PipelineHandler {
 
         try {
 
-            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + port + subscriptionsAll).newBuilder();
+            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + subscriptionsAll).newBuilder();
             Request request = new Request.Builder()
                     .get()
                     .url(httpBuilder.build().url())
@@ -100,7 +100,7 @@ public class PipelineHandler {
 
         try {
 
-            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + port + subscriptionsAll).newBuilder();
+            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint  + subscriptionsAll).newBuilder();
             httpBuilder.addPathSegment(sId);
             httpBuilder.addPathSegment(String.valueOf(runDate));
             httpBuilder.addPathSegment(timeStamp);
@@ -137,7 +137,7 @@ public class PipelineHandler {
 
         try {
 
-            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint + port + query).newBuilder();
+            HttpUrl.Builder httpBuilder = HttpUrl.parse(pipelineEndpoint  + query).newBuilder();
             httpBuilder.addQueryParameter("pageSize", "25");
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonQuery.toString());
             Request request = new Request.Builder()

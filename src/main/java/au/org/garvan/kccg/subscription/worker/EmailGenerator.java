@@ -58,15 +58,15 @@ public class EmailGenerator {
                 //Get genes from article
                List<ConceptDto>articleGenes = articleDto.getArticleConcepts().stream().filter(x->x.getType().equals(AnnotationType.GENE.toString())).collect(Collectors.toList());
 
-                if(articleGenes.size()>0) {
-                    for (ConceptDto aGene : articleGenes) {
-                        if (genesInQuery.contains(aGene.getId())) {
-                            queriedGenes.put(aGene.getText(), aGene.getCount());
-                        } else {
-                            otherGenes.put(aGene.getText(), aGene.getCount());
-                        }
-                    }
-                }
+//                if(articleGenes.size()>0) {
+//                    for (ConceptDto aGene : articleGenes) {
+//                        if (genesInQuery.contains(aGene.getId())) {
+//                            queriedGenes.put(aGene.getText(), aGene.getCount());
+//                        } else {
+//                            otherGenes.put(aGene.getText(), aGene.getCount());
+//                        }
+//                    }
+//                }
                 //To types of annotations in article. Matched with query and additional
                 emailArticle.setQueriedGenes(queriedGenes);
                 emailArticle.setOtherGenes(otherGenes);

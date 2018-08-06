@@ -1,3 +1,3 @@
 connections:
-    pipeline-endpoint: http://localhost:9080/
-    notification-endpoint: https://phenomics.kccg.garvan.org.au/notification
+    pipeline-endpoint: https://phenomics-dev.kccg.garvan.org.au/search-engine/
+    notification-endpoint: https://phenomics-dev.kccg.garvan.org.au/notification/
